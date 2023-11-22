@@ -1,6 +1,5 @@
 .venv/
-media/
 .git
-db.sqlite3
 __pycache__/
-
+media/
+db.sqlite3

@@ -12,22 +12,17 @@ from rest_framework import viewsets
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 
-from .serializers import PhoneSerializer, TokenSerializer
+from .serializers import PhoneSerializer, TokenSerializer, UserSerializer
 from .authentication import TokenAuthentication
 
 from datetime import datetime, timedelta
 import pytz
 import os
-from twilio.rest import Client
-import twilio
 import secrets
 import string
 
 User = get_user_model()
 
-account_sid = 'ACc11bb124b1aac031415d29c89b6d829a'
-auth_token = 'd8b0b2826f2ce7f9d1b66ef95bf66d60'
-client = Client(account_sid, auth_token)
 
 @api_view(['GET'])
 def api_root(request):
@@ -48,6 +43,10 @@ def generate_otp():
 
     return otp
 
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 class GenerateOTPView(APIView):
     def post(self,request):
         permission_classes = [permissions.AllowAny]
@@ -58,12 +57,6 @@ class GenerateOTPView(APIView):
             user = User.objects.get(phone=phone)
             user.password = make_password(otp)
             user.save()
-            
-            message = client.messages.create(
-                              from_='+15343445070',
-                              body=f'Welcome to HairCo! Please use the OTP below to login to your account.\n{otp}\nThis OTP is valid for 10 minutes. Please do not share it with anyone.\nThank you for choosing HairCo',
-                              to='+917903062804'
-                          )
             return Response({'generated_otp': otp})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

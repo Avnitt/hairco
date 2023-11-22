@@ -14,7 +14,7 @@ class ProfessionalViewSet(viewsets.ModelViewSet):
             subservice = Subservice.objects.get(id=subservice)
             queryset = subservice.professionals
         return queryset
-
+ 
 class ASlotViewSet(viewsets.ModelViewSet):
     serializer_class = SlotSerializer
     

@@ -6,9 +6,14 @@ class Professional(models.Model):
     user = models.OneToOneField(User,
                                 on_delete=models.CASCADE)
     bio = models.CharField(max_length=200, blank=True)
-    image_url = models.ImageField(upload_to='professional', blank=False, null=True)
+    image_url = models.ImageField(upload_to='professional', null=True)
     subservices = models.ManyToManyField(Subservice,
                                          related_name='professionals')
+
+    def save(self, *args, **kwargs):
+        self.user.is_staff = True
+        self.user.save()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.user.phone
@@ -18,7 +23,6 @@ class Slot(models.Model):
     professional = models.ForeignKey(Professional,
                                      on_delete=models.CASCADE,
                                      related_name='slots')
-    booked = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.start_time.strftime("%H:%M")
+        return self.start_time.strftime("%m %d %H:%M")

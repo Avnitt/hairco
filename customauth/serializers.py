@@ -7,6 +7,11 @@ import pytz
 
 User = get_user_model()
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
 class PhoneSerializer(serializers.Serializer):
     phone = serializers.CharField(
         label=_("Phone"),

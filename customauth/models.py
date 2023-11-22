@@ -13,23 +13,17 @@ class UserManager(BaseUserManager):
         return user
 
     def create_user(self, phone, **extra_fields):
-        extra_fields.setdefault("role", 'client')
         return self._create_user(phone, **extra_fields)
 
-    def create_professional(self, phone, **extra_fields):
-        extra_fields.setdefault("role", 'professional')
+    def create_staff(self, phone, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
         return self._create_user(phone, **extra_fields)
 
     def create_superuser(self, phone,  **extra_fields):
-        extra_fields.setdefault("role", 'admin')
+        extra_fields.setdefault("is_superuser", True)
         return self._create_user(phone, **extra_fields)
 
 class User(AbstractBaseUser):
-    CHOICES = [
-        ('admin', 'Admin'),
-        ('professional', 'Professional'),
-        ('client', 'Client')
-    ]
     phone = models.CharField(
         _("phone"),
         max_length=10,
@@ -43,9 +37,16 @@ class User(AbstractBaseUser):
         _("active"),
         default=True,
     )
+    is_superuser = models.BooleanField(
+        _("superuser status"),
+        default=False,
+    )
+    is_staff= models.BooleanField(
+        _("staff status"),
+        default=False,
+    )
     date_joined = models.DateTimeField(_("date_joined"), auto_now_add=True)
     password_created = models.DateTimeField(_('password_created'), auto_now=True)
-    role = models.CharField(max_length=12,choices=CHOICES, default='client')
     objects = UserManager()
 
     USERNAME_FIELD = 'phone'

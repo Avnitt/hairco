@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .serializers import ServiceSerializer, SubserviceSerializer
-from .models import Service, Subservice
+from .serializers import ServiceSerializer, SubserviceSerializer, AddonSerializer
+from .models import Service, Subservice, Addon
 from rest_framework import viewsets
 
 class ServiceViewSet(viewsets.ModelViewSet):
@@ -17,3 +17,7 @@ class SubserviceViewSet(viewsets.ModelViewSet):
         else:
             queryset = Subservice.objects.filter(service=service)
         return queryset
+
+class AddonViewSet(viewsets.ModelViewSet):
+    queryset = Addon.objects.all()
+    serializer_class = AddonSerializer
