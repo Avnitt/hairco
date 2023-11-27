@@ -30,7 +30,7 @@ SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-ALLOWED_HOSTS = ['https://thorfinn.pythonanywhere.com']
+ALLOWED_HOSTS = ['thorfinn.pythonanywhere.com']
 
 CORS_ALLOWED_ORIGINS = [
     "https://salon-website-psi.vercel.app",
