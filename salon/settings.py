@@ -20,10 +20,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-v(1dse6n9_%#p#tzmqwrfi7!u4tqel7vzin60!egp2$32h+r0@'
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+ALLOWED_HOSTS = ['https://thorfinn.pythonanywhere.com']
+
+CORS_ALLOWED_ORIGINS = [
+    "https://salon-website-psi.vercel.app",
+    "http://localhost:3000",
+]
 
 # Application definition
 
@@ -34,6 +44,7 @@ INSTALLED_APPS = [
     'booking.apps.BookingConfig',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,6 +57,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
