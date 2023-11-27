@@ -22,5 +22,5 @@ class ASlotViewSet(viewsets.ModelViewSet):
         professional = self.request.GET.get('professional')
         if professional is None:
             return Slot.objects.all()
-        available_slots = Slot.objects.filter(professional=professional, booked=True)
+        available_slots = Slot.objects.filter(professional=professional)
         return available_slots
