@@ -10,7 +10,8 @@ class Appointment(models.Model):
     subservice = models.ForeignKey(Subservice,
                                    on_delete=models.CASCADE,
                                    related_name='appointments')
-    addons = models.ManyToManyField(Addon)
+    addons = models.ManyToManyField(Addon,
+                                    related_name='appointments')
     professional = models.ForeignKey(Professional,
                                      on_delete=models.CASCADE,
                                      related_name='appointments')

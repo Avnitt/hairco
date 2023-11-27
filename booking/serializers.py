@@ -5,7 +5,6 @@ from staff.serializers import SlotSerializer
 from staff.models import Slot
 
 class AppointmentSerializer(serializers.ModelSerializer):
-    addons = AddonSerializer(many=True, required=False)
     slot = SlotSerializer()
     class Meta:
         model = Appointment
@@ -16,5 +15,8 @@ class AppointmentSerializer(serializers.ModelSerializer):
         slot['professional'] = validated_data['professional']
         slot = Slot.objects.create(**slot)
         validated_data['slot'] = slot
+        addons = validated_data.pop('addons')
         appointment = Appointment.objects.create(**validated_data)
+        for addon in addons:
+            appointment.addons.add(addon)
         return appointment
