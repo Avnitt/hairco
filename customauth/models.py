@@ -1,10 +1,13 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.hashers import make_password
 from django.utils.translation import gettext_lazy as _
 
 from django.conf import settings
 
 class UserManager(BaseUserManager):
+    use_in_migrations = True
+
     def _create_user(self, phone, **extra_fields):
         if not phone:
             raise ValueError("The given phone must be set")
@@ -19,11 +22,18 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_staff", True)
         return self._create_user(phone, **extra_fields)
 
-    def create_superuser(self, phone,  **extra_fields):
-        extra_fields.setdefault("is_superuser", True)
+    def create_superuser(self, phone, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('password', make_password(password))
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
         return self._create_user(phone, **extra_fields)
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(
         _("phone"),
         max_length=10,
@@ -37,10 +47,6 @@ class User(AbstractBaseUser):
         _("active"),
         default=True,
     )
-    is_superuser = models.BooleanField(
-        _("superuser status"),
-        default=False,
-    )
     is_staff= models.BooleanField(
         _("staff status"),
         default=False,
@@ -53,3 +59,6 @@ class User(AbstractBaseUser):
 
     class Meta:
         ordering = ['-date_joined']
+
+    def __str__(self):
+        return self.phone

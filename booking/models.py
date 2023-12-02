@@ -17,6 +17,7 @@ class Appointment(models.Model):
                                      related_name='appointments')
     slot = models.OneToOneField(Slot,
                                 on_delete=models.CASCADE)
+    cancelled = models.BooleanField(default=False)
     
     def __str__(self):
         return self.id

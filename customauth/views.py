@@ -11,8 +11,11 @@ from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action
 
 from .serializers import PhoneSerializer, TokenSerializer, UserSerializer
+from booking.serializers import UserAppointmentSerializer
+from booking.models import Appointment
 from .authentication import TokenAuthentication
 
 from datetime import datetime, timedelta
@@ -43,9 +46,20 @@ def generate_otp():
 
     return otp
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class UserAppointmentViewSet(viewsets.ModelViewSet):
+    serializer_class = UserAppointmentSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        #if user_id != str(self.request.user.id):  
+        #    self.permission_denied(
+        #        self.request, 
+        #        message='You can only access your own appointments.'
+        #    )
+        return Appointment.objects.filter(user_id=user_id)
+ 
+    def put(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
 class GenerateOTPView(APIView):
     def post(self,request):

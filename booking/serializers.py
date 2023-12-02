@@ -3,6 +3,7 @@ from .models import Appointment
 from service.serializers import AddonSerializer
 from staff.serializers import SlotSerializer
 from staff.models import Slot
+from customauth.models import User
 
 class AppointmentSerializer(serializers.ModelSerializer):
     slot = SlotSerializer()
@@ -20,3 +21,8 @@ class AppointmentSerializer(serializers.ModelSerializer):
         for addon in addons:
             appointment.addons.add(addon)
         return appointment
+
+class UserAppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = '__all__'
