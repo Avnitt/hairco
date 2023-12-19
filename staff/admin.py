@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Professional, Slot
+from .models import Slot
 
-admin.site.register(Professional)
+#admin.site.register(Professional)
 admin.site.register(Slot)

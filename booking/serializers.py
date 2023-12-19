@@ -13,7 +13,6 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         slot = validated_data['slot']
-        slot['professional'] = validated_data['professional']
         slot = Slot.objects.create(**slot)
         validated_data['slot'] = slot
         addons = validated_data.pop('addons')
