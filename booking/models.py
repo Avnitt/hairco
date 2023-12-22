@@ -15,8 +15,9 @@ class Appointment(models.Model):
 #    professional = models.ForeignKey(Professional,
 #                                     on_delete=models.CASCADE,
 #                                     related_name='appointments')
-    slot = models.OneToOneField(Slot,
-                                on_delete=models.CASCADE)
+    slot = models.ForeignKey(Slot,
+                             on_delete=models.CASCADE,
+                             related_name='appointments')
     cancelled = models.BooleanField(default=False)
     
     def __str__(self):

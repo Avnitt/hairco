@@ -21,6 +21,7 @@ from service.models import Subservice
 class Slot(models.Model):
     start_time = models.DateTimeField()
     booked = models.BooleanField(default=False)
+    flag = models.IntegerField(default=1)
 
     def __str__(self):
         return self.start_time.strftime("%m %d %H:%M")

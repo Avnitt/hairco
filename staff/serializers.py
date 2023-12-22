@@ -10,14 +10,11 @@ from customauth.models import User
 #        fields = '__all__'
 
 class SlotSerializer(serializers.ModelSerializer):
-    def validate(self, attrs):
-        start_time = attrs.get('start_time')
-        bookings = Slot.objects.filter(start_time=start_time)
-        if len(bookings) == 3:
-            self.booked = True
-
-        return attrs
-
     class Meta:
         model = Slot
-        exclude = ['booked']
+        fields = '__all__'
+
+class ASlotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Slot
+        exclude = ['booked','flag']

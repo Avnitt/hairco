@@ -18,10 +18,6 @@ class UserManager(BaseUserManager):
     def create_user(self, phone, **extra_fields):
         return self._create_user(phone, **extra_fields)
 
-    def create_staff(self, phone, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
-        return self._create_user(phone, **extra_fields)
-
     def create_superuser(self, phone, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
