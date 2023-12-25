@@ -1,12 +1,14 @@
 from rest_framework import serializers
-from .models import Appointment 
-from service.serializers import AddonSerializer
+from .models import Appointment
 from staff.serializers import ASlotSerializer
 from staff.models import Slot
-from customauth.models import User
+from service.serializers import AddonSerializer
+from django.core.exceptions import ObjectDoesNotExist
 
 class AppointmentSerializer(serializers.ModelSerializer):
     slot = ASlotSerializer()
+    addons = AddonSerializer(required=False, many=True)
+
     class Meta:
         model = Appointment
         fields = '__all__'
@@ -20,17 +22,18 @@ class AppointmentSerializer(serializers.ModelSerializer):
                 slot.booked = True
             slot.save()
 
-        except:
+        except ObjectDoesNotExist:
             slot = Slot.objects.create(**slot)
         validated_data['slot'] = slot
-        addons = validated_data.pop('addons')
+        # addons = validated_data.pop('addons')
         appointment = Appointment.objects.create(**validated_data)
-        for addon in addons:
-            appointment.addons.add(addon)
+        # for addon in addons:
+        #     appointment.addons.add(addon)
         return appointment
 
 class UserAppointmentSerializer(serializers.ModelSerializer):
     slot = ASlotSerializer()
+
     class Meta:
         model = Appointment
         fields = '__all__'
