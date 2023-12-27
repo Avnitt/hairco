@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 class AppointmentSerializer(serializers.ModelSerializer):
     slot = ASlotSerializer()
     addons = serializers.PrimaryKeyRelatedField(queryset=Addon.objects.all(), many=True, required=False)
-
+    
     class Meta:
         model = Appointment
         fields = '__all__'
@@ -34,7 +34,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
 class UserAppointmentSerializer(serializers.ModelSerializer):
     slot = ASlotSerializer()
-
+    addons = AddonSerializer(many=True)
     class Meta:
         model = Appointment
         fields = '__all__'
