@@ -3,11 +3,12 @@ from .models import Appointment
 from staff.serializers import ASlotSerializer
 from staff.models import Slot
 from service.serializers import AddonSerializer
+from service.models import Addon
 from django.core.exceptions import ObjectDoesNotExist
 
 class AppointmentSerializer(serializers.ModelSerializer):
     slot = ASlotSerializer()
-    addons = AddonSerializer(required=False, many=True)
+    addons = serializers.PrimaryKeyRelatedField(queryset=Addon.objects.all(), many=True, required=False)
 
     class Meta:
         model = Appointment
@@ -25,10 +26,10 @@ class AppointmentSerializer(serializers.ModelSerializer):
         except ObjectDoesNotExist:
             slot = Slot.objects.create(**slot)
         validated_data['slot'] = slot
-        # addons = validated_data.pop('addons')
+        addons = validated_data.pop('addons', [])
         appointment = Appointment.objects.create(**validated_data)
-        # for addon in addons:
-        #     appointment.addons.add(addon)
+        for addon in addons:
+            appointment.addons.add(addon)
         return appointment
 
 class UserAppointmentSerializer(serializers.ModelSerializer):
