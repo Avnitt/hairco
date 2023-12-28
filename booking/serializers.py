@@ -2,14 +2,17 @@ from rest_framework import serializers
 from .models import Appointment
 from staff.serializers import ASlotSerializer
 from staff.models import Slot
-from service.serializers import AddonSerializer
+from service.serializers import AddonSerializer, SubserviceSerializer
 from service.models import Addon
 from django.core.exceptions import ObjectDoesNotExist
 
+
 class AppointmentSerializer(serializers.ModelSerializer):
     slot = ASlotSerializer()
-    addons = serializers.PrimaryKeyRelatedField(queryset=Addon.objects.all(), many=True, required=False)
-    
+    addons = serializers.PrimaryKeyRelatedField(queryset=Addon.objects.all(),
+                                                many=True,
+                                                required=False)
+
     class Meta:
         model = Appointment
         fields = '__all__'
@@ -32,9 +35,12 @@ class AppointmentSerializer(serializers.ModelSerializer):
             appointment.addons.add(addon)
         return appointment
 
+
 class UserAppointmentSerializer(serializers.ModelSerializer):
     slot = ASlotSerializer()
     addons = AddonSerializer(many=True)
+    subservice = SubserviceSerializer()
+
     class Meta:
         model = Appointment
         fields = '__all__'
